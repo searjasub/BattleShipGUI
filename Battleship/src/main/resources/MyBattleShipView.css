@@ -1,0 +1,72 @@
+Label.grid {
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-background-color: lightblue;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+}
+
+Label.unhit {
+    -fx-background-color: darkgrey;
+}
+
+Label.empty {
+    -fx-background-color: lightblue;
+}
+
+Label.hit {
+    -fx-border-color: red;
+}
+
+Label.bottom {
+    -fx-padding: 0 8px 0 4;
+    -fx-font-size: 12pt;
+    /*-fx-text-fill: orange;*/
+    -fx-font-family: "HP Simplified Light", "Comic Sans MS";
+}
+
+.hit {
+    -fx-padding: 10px 50px 35px 50px;
+}
+
+.own {
+    -fx-alignment: center;
+    -fx-padding: 10px 50px 20px 50px;
+}
+
+.doneBtn {
+    -fx-min-width: 80px;
+    -fx-min-height: 25px;
+}
+
+.textAboveButton {
+    -fx-font-family: "HP Simplified Light", "Comic Sans MS";
+    -fx-font-size: 16px;
+    -fx-background-color: red;
+    -fx-padding: 20px 0 20px 0;
+}
+
+.infoText {
+    -fx-font-family: "HP Simplified Light", "Comic Sans MS";
+    -fx-font-size: 16px;
+    -fx-padding: 10px;
+}
+
+.vBox {
+    -fx-alignment: center;
+}
+
+Label.info {
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-alignment: center;
+    -fx-font-family: "HP Simplified Light", "Comic Sans MS";
+}
+
+Label.firstSquare {
+    -fx-background-color: black;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+}

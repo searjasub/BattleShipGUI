@@ -1,0 +1,22 @@
+.root{
+    -fx-background-image: url("battleship-wallpaper.jpg");
+    -fx-background-size: 620px 300px;
+}
+
+.start, .load, .exit{
+    -fx-text-alignment: center;
+    -fx-min-width: 100px;
+    -fx-min-height: 40px;
+    -fx-background-color: lightblue;
+    -fx-font-family: "HP Simplified Light";
+    -fx-font-size: 16px;
+}
+
+.start:hover, .load:hover, .exit:hover{
+    -fx-border-color: red;
+    -fx-border-width: 3px;
+}
+
+.hbox {
+    -fx-alignment: center;
+}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="edu.neumont.lopez.view.MyBattleShipView"
+            stylesheets="MyBattleShipView.css">
+    <top>
+        <MenuBar>
+            <Menu text="Game">
+                <MenuItem text="Restart" onAction="#onRestart"/>
+                <MenuItem text="Save" onAction="#onSave"/>
+                <MenuItem text="Load" onAction="#onLoad"/>
+                <MenuItem text="Exit" onAction="#onExit"/>
+            </Menu>
+            <Menu text="Help">
+                <MenuItem text="About" onAction="#onAbout"/>
+            </Menu>
+        </MenuBar>
+    </top>
+    <center>
+        <HBox>
+            <VBox styleClass="vBox">
+                <Text styleClass="infoText">Tracking Board</Text>
+                <GridPane fx:id="boardGridPaneAttacking" styleClass="hit">
+                </GridPane>
+                <Text styleClass="infoText">Your board</Text>
+                <GridPane fx:id="boardGridPane" styleClass="own">
+                </GridPane>
+            </VBox>
+            <VBox>
+                <Text fx:id="textAboveButton" styleClass="textAboveButton">aa</Text>
+                <Button fx:id="doneBtn" styleClass="doneBtn">
+                </Button>
+            </VBox>
+        </HBox>
+    </center>
+
+    <bottom>
+        <HBox>
+            <Label styleClass="bottom">Player</Label>
+            <Label styleClass="bottom" fx:id="playerTurnLabel"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
