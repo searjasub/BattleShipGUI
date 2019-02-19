@@ -108,7 +108,11 @@ public class BattleShipController {
 
             Ship[] ships = board.getShips();
             Ship ship;
-
+//            try {
+//
+//            }catch (SquareAlreadyTakenException ex){
+//                view.showSquareAlreadyTaken();
+//            }
             if (shipSize == 0) {
                 ship = new Ship(Ships.CARRIER);
                 isValid = checkInsideBoard(ship, whereInBoard);
@@ -117,7 +121,8 @@ public class BattleShipController {
                 } else {
                     updateBoardDirection(ship, whereInBoard);
                 }
-            } if (shipSize == 1){
+            }
+            if (shipSize == 1) {
                 ship = new Ship(Ships.BATTLESHIP);
                 isValid = checkInsideBoard(ship, whereInBoard);
                 if (checkForOverlapping(whereInBoard)) {
@@ -126,7 +131,33 @@ public class BattleShipController {
                     updateBoardDirection(ship, whereInBoard);
                 }
             }
-
+            if (shipSize == 2) {
+                ship = new Ship(Ships.SUBMARINE);
+                isValid = checkInsideBoard(ship, whereInBoard);
+                if (checkForOverlapping(whereInBoard)) {
+                    throw new SquareAlreadyTakenException(whereInBoard);
+                } else {
+                    updateBoardDirection(ship, whereInBoard);
+                }
+            }
+            if (shipSize == 3) {
+                ship = new Ship(Ships.CRUISER);
+                isValid = checkInsideBoard(ship, whereInBoard);
+                if (checkForOverlapping(whereInBoard)) {
+                    throw new SquareAlreadyTakenException(whereInBoard);
+                } else {
+                    updateBoardDirection(ship, whereInBoard);
+                }
+            }
+            if (shipSize == 4) {
+                ship = new Ship(Ships.DESTROYER);
+                isValid = checkInsideBoard(ship, whereInBoard);
+                if (checkForOverlapping(whereInBoard)) {
+                    throw new SquareAlreadyTakenException(whereInBoard);
+                } else {
+                    updateBoardDirection(ship, whereInBoard);
+                }
+            }
 
         }
         //turn.getBoard().printBoard();
@@ -137,22 +168,27 @@ public class BattleShipController {
     public void updateBoardDirection(Ship s, Coordinate c) {
         if (horizontal) {
             if (s.getSize() == Ships.CARRIER.getSize()) {
+
+
+
                 for (int i = Ships.CARRIER.getSize() - 1; i >= 0; i--) {
                     Coordinate newToCheck = new Coordinate(c.getRow(), c.getCol() + i);
                     if (!checkInsideBoard(s, newToCheck)) {
                         throw new SquareAlreadyTakenException(newToCheck);
+                    } else {
+
+                        onSquareSelected(newToCheck);
                     }
-                    //turn.getBoard().getSquares()[c.getRow() + userEx][c.getCol() + i].setState(State.UNHIT);
-                    onSquareSelected(c);
                 }
             } else if (s.getSize() == Ships.BATTLESHIP.getSize()) {
                 for (int i = Ships.BATTLESHIP.getSize() - 1; i >= 0; i--) {
                     Coordinate newToCheck = new Coordinate(c.getRow(), c.getCol() + i);
                     if (!checkInsideBoard(s, newToCheck)) {
                         throw new SquareAlreadyTakenException(newToCheck);
+                    } else {
+
+                        onSquareSelected(newToCheck);
                     }
-                    //turn.getBoard().getSquares()[c.getRow() + userEx][c.getCol() + i].setState(State.UNHIT);
-                    onSquareSelected(c);
                 }
             } else if (s.getSize() == Ships.CRUISER.getSize()) {
                 for (int i = Ships.CRUISER.getSize() - 1; i >= 0; i--) {
@@ -161,7 +197,7 @@ public class BattleShipController {
                         throw new SquareAlreadyTakenException(newToCheck);
                     }
                     //turn.getBoard().getSquares()[c.getRow() + userEx][c.getCol() + i].setState(State.UNHIT);
-                    onSquareSelected(c);
+                    onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.SUBMARINE.getSize()) {
                 for (int i = Ships.SUBMARINE.getSize() - 1; i >= 0; i--) {
@@ -170,7 +206,7 @@ public class BattleShipController {
                         throw new SquareAlreadyTakenException(newToCheck);
                     }
                     //turn.getBoard().getSquares()[c.getRow() + userEx][c.getCol() + i].setState(State.UNHIT);
-                    onSquareSelected(c);
+                    onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.DESTROYER.getSize()) {
                 for (int i = Ships.DESTROYER.getSize() - 1; i >= 0; i--) {
@@ -179,7 +215,7 @@ public class BattleShipController {
                         throw new SquareAlreadyTakenException(newToCheck);
                     }
                     //turn.getBoard().getSquares()[c.getRow() + userEx][c.getCol() + i].setState(State.UNHIT);
-                    onSquareSelected(c);
+                    onSquareSelected(newToCheck);
                 }
             }
         } else {
@@ -190,7 +226,7 @@ public class BattleShipController {
                         throw new SquareAlreadyTakenException(newToCheck);
                     }
                     //turn.getBoard().getSquares()[c.getRow() + i - 1][c.getCol()].setState(State.UNHIT);
-                    onSquareSelected(c);
+                    onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.BATTLESHIP.getSize()) {
                 for (int i = Ships.BATTLESHIP.getSize() - 1; i >= 0; i--) {
@@ -199,7 +235,7 @@ public class BattleShipController {
                         throw new SquareAlreadyTakenException(newToCheck);
                     }
                     //turn.getBoard().getSquares()[c.getRow() + i - 1][c.getCol()].setState(State.UNHIT);
-                    onSquareSelected(c);
+                    onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.CRUISER.getSize()) {
                 for (int i = Ships.CRUISER.getSize() - 1; i >= 0; i--) {
@@ -208,7 +244,7 @@ public class BattleShipController {
                         throw new SquareAlreadyTakenException(newToCheck);
                     }
                     //turn.getBoard().getSquares()[c.getRow() + i - 1][c.getCol()].setState(State.UNHIT);
-                    onSquareSelected(c);
+                    onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.SUBMARINE.getSize()) {
                 for (int i = Ships.SUBMARINE.getSize() - 1; i >= 0; i--) {
@@ -217,7 +253,7 @@ public class BattleShipController {
                         throw new SquareAlreadyTakenException(newToCheck);
                     }
                     //turn.getBoard().getSquares()[c.getRow() + i - 1][c.getCol()].setState(State.UNHIT);
-                    onSquareSelected(c);
+                    onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.DESTROYER.getSize()) {
                 for (int i = Ships.DESTROYER.getSize() - 1; i >= 0; i--) {
@@ -226,7 +262,7 @@ public class BattleShipController {
                         throw new SquareAlreadyTakenException(newToCheck);
                     }
                     //turn.getBoard().getSquares()[c.getRow() + i - 1][c.getCol()].setState(State.UNHIT);
-                    onSquareSelected(c);
+                    onSquareSelected(newToCheck);
                 }
             }
 

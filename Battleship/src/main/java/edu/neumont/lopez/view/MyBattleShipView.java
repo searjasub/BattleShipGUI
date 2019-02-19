@@ -72,12 +72,13 @@ public class MyBattleShipView implements BattleShipView {
         drawShootingGrid();
         drawOwnGrid();
         controller.initPlayer(turn);
+        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n");
         placeSwitchViewButton();
 
     }
 
     public Coordinate viewPlacingShips() {
-        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n");
+
 
         //how to get the label clicked
 
