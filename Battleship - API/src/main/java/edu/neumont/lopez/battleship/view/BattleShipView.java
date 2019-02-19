@@ -20,5 +20,4 @@ public interface BattleShipView {
     void showSquareAlreadyTaken(Coordinate coordinate);
     void showSquareOutOfBounds(Coordinate coordinate);
 
-    void showShipInfo(Ship ship);
 }

@@ -19,8 +19,8 @@ public class Coordinate {
     }
 
     public void setRow(int row) {
-        if (row < 0 || row >= Board.BOARD_HEIGHT){
-            throw new CoordinateOutOfBoundException(row);
+        if (row < 0 || row > Board.BOARD_HEIGHT){
+            System.out.println("invalid row " + row);
         }
         this.row = row;
     }
@@ -30,8 +30,8 @@ public class Coordinate {
     }
 
     public void setCol(int col) {
-        if (col < 0 || col >= Board.BOARD_WIDTH){
-            throw new CoordinateOutOfBoundException(col);
+        if (col < 0 || col > Board.BOARD_WIDTH){
+            System.out.println("invalid column " + col);
         }
         this.col = col;
     }

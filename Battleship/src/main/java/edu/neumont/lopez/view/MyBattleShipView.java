@@ -71,8 +71,8 @@ public class MyBattleShipView implements BattleShipView {
         controller.initPlayers(getPlayersName());
         drawShootingGrid();
         drawOwnGrid();
+        showShipInfo();
         controller.initPlayer(turn);
-        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n");
         placeSwitchViewButton();
 
     }
@@ -91,13 +91,13 @@ public class MyBattleShipView implements BattleShipView {
             @Override
             public void handle(MouseEvent event) {
                 if (countOnShipsPlaced < 5) {
-
+                    showShipInfo();
                     Label labelOwnPlayer = (Label) event.getSource();
                     String buttonId = labelOwnPlayer.getId();
                     String[] pieces = buttonId.split("x");
 
                     Coordinate coordinate = new Coordinate((Integer.parseInt(pieces[0])), Integer.parseInt(pieces[1]));
-
+                    System.out.println("View: " + coordinate);
                     if (event.getButton() == MouseButton.PRIMARY) {
                         controller.placeShips(coordinate, countOnShipsPlaced, true);
                         countOnShipsPlaced++;
@@ -105,24 +105,31 @@ public class MyBattleShipView implements BattleShipView {
                         controller.placeShips(coordinate, countOnShipsPlaced, false);
                         countOnShipsPlaced++;
                     }
+
                 } else {
                     //BetweenTurns screen
                 }
+
 
             }
         };
     }
 
 
-    public void showShipInfo(Ship ship) {
-        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" +
-                "Current Ship Size: " + ship.getSize());
 
-    }
+    public void showShipInfo() {
 
+        //textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship size: 5");
+        if (countOnShipsPlaced == 0){
+        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship size: 4");
+        } else if (countOnShipsPlaced == 2){
+        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship size: 3");
+        }else if (countOnShipsPlaced == 3){
+        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship size: 2");
+        }else if (countOnShipsPlaced == 4){
+        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship size: 1");
+        }
 
-    public boolean setShipOrientation(boolean isHorizontal) {
-        return isHorizontal;
     }
 
 
@@ -276,7 +283,7 @@ public class MyBattleShipView implements BattleShipView {
 
     @Override
     public void showSquareOutOfBounds(Coordinate boardSquareCoordinate) {
-        new Alert(Alert.AlertType.ERROR, "Your selection is invalid.", ButtonType.OK).show();
+        new Alert(Alert.AlertType.ERROR, "The ship will be sticking out.", ButtonType.OK).show();
     }
 
     @Override

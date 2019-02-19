@@ -2,8 +2,6 @@ package edu.neumont.lopez.battleship.controller;
 
 import edu.neumont.lopez.battleship.enumeration.Ships;
 import edu.neumont.lopez.battleship.enumeration.State;
-import edu.neumont.lopez.battleship.exceptions.CoordinateOutOfBoundException;
-import edu.neumont.lopez.battleship.exceptions.SquareAlreadyTakenException;
 import edu.neumont.lopez.battleship.model.*;
 import edu.neumont.lopez.battleship.view.BattleShipView;
 
@@ -100,188 +98,258 @@ public class BattleShipController {
         Coordinate whereInBoard;
         //for (Ship ship : turn.getBoard().getShips()) {
         //System.out.println("\nLet's place the " + ship.getName() + "\nRemember that the size is " + ship.getSize());
-        boolean isValid = false;
-        while (!isValid) {
-            //view.showShipInfo(ship);
-            whereInBoard = coordinate;
-            horizontal = posistion;
+//        boolean isValid = false;
+//        while (!isValid) {
+        //view.showShipInfo(ship);
+        whereInBoard = coordinate;
+        horizontal = posistion;
 
-            Ship[] ships = board.getShips();
-            Ship ship;
+        Ship[] ships = board.getShips();
+        Ship ship;
 //            try {
 //
 //            }catch (SquareAlreadyTakenException ex){
 //                view.showSquareAlreadyTaken();
 //            }
-            if (shipSize == 0) {
-                ship = new Ship(Ships.CARRIER);
-                isValid = checkInsideBoard(ship, whereInBoard);
+
+        System.out.println("controller: "+coordinate);
+
+        if (shipSize == 0) {
+            ship = new Ship(Ships.CARRIER);
+            if (checkInsideBoard(ship, whereInBoard)) {
                 if (checkForOverlapping(whereInBoard)) {
-                    throw new SquareAlreadyTakenException(whereInBoard);
-                } else {
-                    updateBoardDirection(ship, whereInBoard);
-                }
-            }
-            if (shipSize == 1) {
-                ship = new Ship(Ships.BATTLESHIP);
-                isValid = checkInsideBoard(ship, whereInBoard);
-                if (checkForOverlapping(whereInBoard)) {
-                    throw new SquareAlreadyTakenException(whereInBoard);
-                } else {
-                    updateBoardDirection(ship, whereInBoard);
-                }
-            }
-            if (shipSize == 2) {
-                ship = new Ship(Ships.SUBMARINE);
-                isValid = checkInsideBoard(ship, whereInBoard);
-                if (checkForOverlapping(whereInBoard)) {
-                    throw new SquareAlreadyTakenException(whereInBoard);
-                } else {
-                    updateBoardDirection(ship, whereInBoard);
-                }
-            }
-            if (shipSize == 3) {
-                ship = new Ship(Ships.CRUISER);
-                isValid = checkInsideBoard(ship, whereInBoard);
-                if (checkForOverlapping(whereInBoard)) {
-                    throw new SquareAlreadyTakenException(whereInBoard);
-                } else {
-                    updateBoardDirection(ship, whereInBoard);
-                }
-            }
-            if (shipSize == 4) {
-                ship = new Ship(Ships.DESTROYER);
-                isValid = checkInsideBoard(ship, whereInBoard);
-                if (checkForOverlapping(whereInBoard)) {
-                    throw new SquareAlreadyTakenException(whereInBoard);
+//                    throw new SquareAlreadyTakenException(whereInBoard);
                 } else {
                     updateBoardDirection(ship, whereInBoard);
                 }
             }
 
         }
-        //turn.getBoard().printBoard();
-        // }
-        //switchTurn();
+
+        if (shipSize == 1) {
+            ship = new Ship(Ships.BATTLESHIP);
+            if (checkInsideBoard(ship, whereInBoard)) {
+                if (checkForOverlapping(whereInBoard)) {
+//                    throw new SquareAlreadyTakenException(whereInBoard);
+                    System.out.println(whereInBoard + " is not valid");
+                } else {
+                    updateBoardDirection(ship, whereInBoard);
+                }
+            }
+        }
+        if (shipSize == 2) {
+            ship = new Ship(Ships.SUBMARINE);
+            if (checkInsideBoard(ship, whereInBoard)) {
+                if (checkForOverlapping(whereInBoard)) {
+//                    throw new SquareAlreadyTakenException(whereInBoard);
+                } else {
+                    updateBoardDirection(ship, whereInBoard);
+                }
+            }
+        }
+        if (shipSize == 3) {
+            ship = new Ship(Ships.CRUISER);
+            if (checkInsideBoard(ship, whereInBoard)) {
+                if (checkForOverlapping(whereInBoard)) {
+//                    throw new SquareAlreadyTakenException(whereInBoard);
+                } else {
+                    updateBoardDirection(ship, whereInBoard);
+                }
+            }
+        }
+        if (shipSize == 4) {
+            ship = new Ship(Ships.DESTROYER);
+            if (checkInsideBoard(ship, whereInBoard)) {
+                if (checkForOverlapping(whereInBoard)) {
+//                    throw new SquareAlreadyTakenException(whereInBoard);
+                } else {
+                    updateBoardDirection(ship, whereInBoard);
+                }
+            }
+        }
+
     }
+    //turn.getBoard().printBoard();
+    // }
+    //switchTurn();
+    //}
 
     public void updateBoardDirection(Ship s, Coordinate c) {
+
+        if (validate(c, s, horizontal)) {
+            paintShip(c, s, horizontal);
+        }
+    }
+
+    private void paintShip(Coordinate c, Ship s, boolean horizontal) {
         if (horizontal) {
             if (s.getSize() == Ships.CARRIER.getSize()) {
-
-
-
-                for (int i = Ships.CARRIER.getSize() - 1; i >= 0; i--) {
+                for (int i = 0; i < Ships.CARRIER.getSize(); i++) {
                     Coordinate newToCheck = new Coordinate(c.getRow(), c.getCol() + i);
-                    if (!checkInsideBoard(s, newToCheck)) {
-                        throw new SquareAlreadyTakenException(newToCheck);
-                    } else {
-
-                        onSquareSelected(newToCheck);
-                    }
+                    onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.BATTLESHIP.getSize()) {
-                for (int i = Ships.BATTLESHIP.getSize() - 1; i >= 0; i--) {
+                for (int i = 0; i < Ships.BATTLESHIP.getSize(); i++) {
                     Coordinate newToCheck = new Coordinate(c.getRow(), c.getCol() + i);
-                    if (!checkInsideBoard(s, newToCheck)) {
-                        throw new SquareAlreadyTakenException(newToCheck);
-                    } else {
-
-                        onSquareSelected(newToCheck);
-                    }
+                    onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.CRUISER.getSize()) {
-                for (int i = Ships.CRUISER.getSize() - 1; i >= 0; i--) {
+                for (int i = 0; i < Ships.CRUISER.getSize(); i++) {
                     Coordinate newToCheck = new Coordinate(c.getRow(), c.getCol() + i);
-                    if (!checkInsideBoard(s, newToCheck)) {
-                        throw new SquareAlreadyTakenException(newToCheck);
-                    }
-                    //turn.getBoard().getSquares()[c.getRow() + userEx][c.getCol() + i].setState(State.UNHIT);
                     onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.SUBMARINE.getSize()) {
-                for (int i = Ships.SUBMARINE.getSize() - 1; i >= 0; i--) {
+//                for (int i = Ships.SUBMARINE.getSize() - 1; i >= 0; i--) {
+//                    Coordinate newToCheck = new Coordinate(c.getRow(), c.getCol() + i);
+//                    onSquareSelected(newToCheck);
+//                }
+                for (int i = 0; i < Ships.SUBMARINE.getSize(); i++) {
                     Coordinate newToCheck = new Coordinate(c.getRow(), c.getCol() + i);
-                    if (!checkInsideBoard(s, newToCheck)) {
-                        throw new SquareAlreadyTakenException(newToCheck);
-                    }
-                    //turn.getBoard().getSquares()[c.getRow() + userEx][c.getCol() + i].setState(State.UNHIT);
                     onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.DESTROYER.getSize()) {
-                for (int i = Ships.DESTROYER.getSize() - 1; i >= 0; i--) {
+//                for (int i = Ships.DESTROYER.getSize() - 1; i >= 0; i--) {
+//                    Coordinate newToCheck = new Coordinate(c.getRow(), c.getCol() + i);
+//                    onSquareSelected(newToCheck);
+//                }
+                for (int i = 0; i < Ships.DESTROYER.getSize(); i++) {
                     Coordinate newToCheck = new Coordinate(c.getRow(), c.getCol() + i);
-                    if (!checkInsideBoard(s, newToCheck)) {
-                        throw new SquareAlreadyTakenException(newToCheck);
-                    }
-                    //turn.getBoard().getSquares()[c.getRow() + userEx][c.getCol() + i].setState(State.UNHIT);
                     onSquareSelected(newToCheck);
                 }
             }
         } else {
             if (s.getSize() == Ships.CARRIER.getSize()) {
                 for (int i = Ships.CARRIER.getSize() - 1; i >= 0; i--) {
-                    Coordinate newToCheck = new Coordinate(c.getRow() + i - 1, c.getCol());
-                    if (!checkInsideBoard(s, newToCheck)) {
-                        throw new SquareAlreadyTakenException(newToCheck);
-                    }
-                    //turn.getBoard().getSquares()[c.getRow() + i - 1][c.getCol()].setState(State.UNHIT);
+                    Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
                     onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.BATTLESHIP.getSize()) {
                 for (int i = Ships.BATTLESHIP.getSize() - 1; i >= 0; i--) {
-                    Coordinate newToCheck = new Coordinate(c.getRow() + i - 1, c.getCol());
-                    if (!checkInsideBoard(s, newToCheck)) {
-                        throw new SquareAlreadyTakenException(newToCheck);
-                    }
-                    //turn.getBoard().getSquares()[c.getRow() + i - 1][c.getCol()].setState(State.UNHIT);
+                    Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
                     onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.CRUISER.getSize()) {
                 for (int i = Ships.CRUISER.getSize() - 1; i >= 0; i--) {
-                    Coordinate newToCheck = new Coordinate(c.getRow() + i - 1, c.getCol());
-                    if (!checkInsideBoard(s, newToCheck)) {
-                        throw new SquareAlreadyTakenException(newToCheck);
-                    }
-                    //turn.getBoard().getSquares()[c.getRow() + i - 1][c.getCol()].setState(State.UNHIT);
+                    Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
                     onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.SUBMARINE.getSize()) {
                 for (int i = Ships.SUBMARINE.getSize() - 1; i >= 0; i--) {
-                    Coordinate newToCheck = new Coordinate(c.getRow() + 1 - 1, c.getCol());
-                    if (!checkInsideBoard(s, newToCheck)) {
-                        throw new SquareAlreadyTakenException(newToCheck);
-                    }
-                    //turn.getBoard().getSquares()[c.getRow() + i - 1][c.getCol()].setState(State.UNHIT);
+                    Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
                     onSquareSelected(newToCheck);
                 }
             } else if (s.getSize() == Ships.DESTROYER.getSize()) {
                 for (int i = Ships.DESTROYER.getSize() - 1; i >= 0; i--) {
-                    Coordinate newToCheck = new Coordinate(c.getRow() + i - 1, c.getCol());
-                    if (!checkInsideBoard(s, newToCheck)) {
-                        throw new SquareAlreadyTakenException(newToCheck);
-                    }
-                    //turn.getBoard().getSquares()[c.getRow() + i - 1][c.getCol()].setState(State.UNHIT);
+                    Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
                     onSquareSelected(newToCheck);
                 }
             }
-
         }
     }
 
+
+    private boolean validate(Coordinate c, Ship s, boolean horizontal) {
+        if (horizontal) {
+
+            if (s.getSize() == Ships.CARRIER.getSize()) {
+                for (int i = 0; i < Ships.CARRIER.getSize(); i++) {
+                    Coordinate coordinate = new Coordinate(c.getRow(), c.getCol() + i);
+                    if(coordinate.getCol() > Board.BOARD_WIDTH){
+                        System.out.println(coordinate);
+                        return false;
+                    }
+                }
+            } else if (s.getSize() == Ships.BATTLESHIP.getSize()) {
+                for (int i = 0; i < Ships.BATTLESHIP.getSize(); i++) {
+                    Coordinate coordinate = new Coordinate(c.getRow(), c.getCol() + i);
+                    if(coordinate.getCol() > Board.BOARD_WIDTH){
+                        System.out.println(coordinate);
+                        return false;
+                    }
+                }
+            } else if (s.getSize() == Ships.CRUISER.getSize()) {
+                for (int i = 0; i < Ships.CRUISER.getSize(); i++) {
+                    Coordinate coordinate = new Coordinate(c.getRow(), c.getCol() + i);
+                    if(coordinate.getCol() > Board.BOARD_WIDTH){
+                        System.out.println(coordinate);
+                        return false;
+                    }
+                }
+            } else if (s.getSize() == Ships.SUBMARINE.getSize()) {
+                for (int i = 0; i < Ships.SUBMARINE.getSize(); i++) {
+                    Coordinate coordinate = new Coordinate(c.getRow(), c.getCol() + i);
+                    if(coordinate.getCol() > Board.BOARD_WIDTH){
+                        System.out.println(coordinate);
+                        return false;
+                    }
+                }
+            } else if (s.getSize() == Ships.DESTROYER.getSize()) {
+                for (int i = 0; i < Ships.DESTROYER.getSize(); i++) {
+                    Coordinate coordinate = new Coordinate(c.getRow(), c.getCol() + i);
+                    if(coordinate.getCol() > Board.BOARD_WIDTH){
+                        System.out.println(coordinate);
+                        return false;
+                    }
+                }
+            }
+        } else {
+
+            if (s.getSize() == Ships.CARRIER.getSize()) {
+                for (int i = Ships.CARRIER.getSize() - 1; i >= 0; i--) {
+                    Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
+                    if (!checkInsideBoard(s, newToCheck)) {
+                        //throw new SquareAlreadyTakenException(newToCheck);
+                        return false;
+                    }
+                    //turn.getBoard().getSquares()[c.getRow() + i - 1][c.getCol()].setState(State.UNHIT);
+                    //onSquareSelected(newToCheck);
+                }
+            } else if (s.getSize() == Ships.BATTLESHIP.getSize()) {
+                for (int i = Ships.BATTLESHIP.getSize() - 1; i >= 0; i--) {
+                    Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
+                    if (!checkInsideBoard(s, newToCheck)) {
+                        return false;
+                    }
+                }
+            } else if (s.getSize() == Ships.CRUISER.getSize()) {
+                for (int i = Ships.CRUISER.getSize() - 1; i >= 0; i--) {
+                    Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
+                    if (!checkInsideBoard(s, newToCheck)) {
+                        return false;
+                    }
+                }
+            } else if (s.getSize() == Ships.SUBMARINE.getSize()) {
+                for (int i = Ships.SUBMARINE.getSize() - 1; i >= 0; i--) {
+                    Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
+                    if (!checkInsideBoard(s, newToCheck)) {
+                        return false;
+                    }
+                }
+            } else if (s.getSize() == Ships.DESTROYER.getSize()) {
+                for (int i = Ships.DESTROYER.getSize() - 1; i >= 0; i--) {
+                    Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
+                    if (!checkInsideBoard(s, newToCheck)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     public boolean checkForOverlapping(Coordinate coordinate) {
-        if (turn.getBoard().getSquares()[coordinate.getRow() - 1][coordinate.getCol()].getState() == State.EMPTY) {
+        if (turn.getBoard().getSquares()[coordinate.getRow()][coordinate.getCol()].getState() == State.EMPTY) {
             return false;
         }
         return true;
     }
 
     public boolean checkInsideBoard(Ship s, Coordinate c) {
-
         if (horizontal) {
             if ((c.getCol() <= 0 || c.getCol() > 9)
                     && (Board.BOARD_WIDTH - c.getCol() < s.getSize())) {
-                System.out.println("\nSorry that is not a valid column, the ship will be sticking out.\nTry a new coordinate\n");
+                view.showSquareOutOfBounds(c);
                 return false;
             } else {
                 return true;
@@ -289,7 +357,7 @@ public class BattleShipController {
         } else {
             if ((c.getRow() <= 0 || c.getRow() >= 10)
                     && (Board.BOARD_HEIGHT - c.getRow() < s.getSize())) {
-                System.out.println("\nSorry that is not a valid row, the ship will be sticking out.\nTry a new coordinate\n");
+                view.showSquareOutOfBounds(c);
                 return false;
             } else {
                 return true;
@@ -328,16 +396,15 @@ public class BattleShipController {
     }
 
     public void onSquareSelected(Coordinate coordinate) {
-        try {
-            this.board.takeSquare(State.UNHIT, coordinate);
-            this.view.updateBoardDisplay(this.board);
-        } catch (CoordinateOutOfBoundException ex) {
-            this.view.showSquareOutOfBounds(coordinate);
-        } catch (SquareAlreadyTakenException ex) {
-            this.view.showSquareAlreadyTaken(coordinate);
-        }
+//        try {
+        this.board.takeSquare(State.UNHIT, coordinate);
+        this.view.updateBoardDisplay(this.board);
+//        } catch (CoordinateOutOfBoundException ex) {
+//            this.view.showSquareOutOfBounds(coordinate);
+//        } catch (SquareAlreadyTakenException ex) {
+//            this.view.showSquareAlreadyTaken(coordinate);
+//        }
         //this.completingTurn();
-
-
     }
+
 }

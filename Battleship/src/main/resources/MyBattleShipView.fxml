@@ -30,7 +30,7 @@
                 <GridPane fx:id="boardGridPane" styleClass="own">
                 </GridPane>
             </VBox>
-            <VBox>
+            <VBox styleClass="vBox">
                 <Text fx:id="textAboveButton" styleClass="textAboveButton">aa</Text>
                 <Button fx:id="doneBtn" styleClass="doneBtn">
                 </Button>

@@ -91,7 +91,8 @@ public class Board implements Serializable {
 
     public void checkSquareTaken(Coordinate coordinate) {
         if (isSquareTaken(coordinate)) {
-            throw new SquareAlreadyTakenException(coordinate);
+//            throw new SquareAlreadyTakenException(coordinate);
+            System.out.println("square " + coordinate + " already taken");
         }
     }
 
