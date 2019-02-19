@@ -6,7 +6,7 @@ public class Ship {
     private final String name;
     private final int size;
 
-    Ship(Ships ship) {
+    public Ship(Ships ship) {
         this.name = ship.getName();
         this.size = ship.getSize();
     }
@@ -18,4 +18,6 @@ public class Ship {
     public int getSize() {
         return size;
     }
+
+
 }

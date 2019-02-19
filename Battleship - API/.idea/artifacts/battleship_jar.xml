@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="battleship:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/battleship_jar</output-path>
+    <root id="archive" name="battleship.jar">
+      <element id="module-output" name="battleship" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/ConsoleIO/ConsoleIO/1.0-SNAPSHOT/ConsoleIO-1.0-SNAPSHOT.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

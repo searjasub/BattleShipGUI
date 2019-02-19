@@ -22,12 +22,13 @@ public class BattleShipController {
 
     private int userEx = -1;
     private boolean horizontal;
+    private Coordinate coordinate;
+
 
     public BattleShipController(BattleShipView ui) {
         this.view = ui;
         this.view.registerController(this);
     }
-
 
     public void initPlayers(List<String> playerNames) {
         this.board.getPlayerOne().setName(playerNames.get(0));
@@ -45,11 +46,6 @@ public class BattleShipController {
         this.view.updateTurnDisplay(this.board.getTurn());
         this.view.updateBoardDisplay(this.board);
 
-    }
-
-    public void switchTurn() {
-        turn = (turn == player1 ? player2 : player1);
-        notTurn = (notTurn == player2 ? player1 : player2);
     }
 
     /*public void takeTurn() {
@@ -72,6 +68,11 @@ public class BattleShipController {
         } while (!view.done());
     }*/
 
+    public void switchTurn() {
+        turn = (turn == player1 ? player2 : player1);
+        notTurn = (notTurn == player2 ? player1 : player2);
+    }
+
     public boolean updateBothBoards(Coordinate c, BoardSquare[][] notTurnBoard, BoardSquare[][] turnAttackingBoard) {
         if (notTurnBoard[c.getRow() + userEx][c.getCol()].getState() == State.HIT) {
             System.out.println("\n\nYou already attacked that one before, try another one");
@@ -91,27 +92,33 @@ public class BattleShipController {
         }
     }
 
-    private Coordinate coordinate;
-
-    public void coordinateHelper(Coordinate coordinate){
+    public void coordinateHelper(Coordinate coordinate) {
         this.coordinate = coordinate;
     }
 
     public void placeShips(Coordinate coordinate, int shipSize, boolean posistion) {
         Coordinate whereInBoard;
         //for (Ship ship : turn.getBoard().getShips()) {
-            //System.out.println("\nLet's place the " + ship.getName() + "\nRemember that the size is " + ship.getSize());
-            boolean isValid = false;
-            while (!isValid) {
-                //view.showShipInfo(ship);
-                whereInBoard = coordinate;
-                horizontal = posistion;
+        //System.out.println("\nLet's place the " + ship.getName() + "\nRemember that the size is " + ship.getSize());
+        boolean isValid = false;
+        while (!isValid) {
+            //view.showShipInfo(ship);
+            whereInBoard = coordinate;
+            horizontal = posistion;
 
-                if (shipSize == 0){
+            Ship[] ships = board.getShips();
+            Ship ship;
 
+            if (shipSize == 0) {
+                ship = new Ship(Ships.CARRIER);
+                isValid = checkInsideBoard(ship, whereInBoard);
+                if (checkForOverlapping(whereInBoard)) {
+                    throw new SquareAlreadyTakenException(whereInBoard);
+                } else {
+                    updateBoardDirection(ship, whereInBoard);
                 }
-
-
+            } if (shipSize == 1){
+                ship = new Ship(Ships.BATTLESHIP);
                 isValid = checkInsideBoard(ship, whereInBoard);
                 if (checkForOverlapping(whereInBoard)) {
                     throw new SquareAlreadyTakenException(whereInBoard);
@@ -119,8 +126,11 @@ public class BattleShipController {
                     updateBoardDirection(ship, whereInBoard);
                 }
             }
-            //turn.getBoard().printBoard();
-       // }
+
+
+        }
+        //turn.getBoard().printBoard();
+        // }
         //switchTurn();
     }
 

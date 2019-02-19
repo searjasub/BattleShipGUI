@@ -61,6 +61,8 @@ public class Board implements Serializable {
         return ships;
     }
 
+
+
     private void initShips() {
         ships = new Ship[]{
                 new Ship(Ships.CARRIER),
