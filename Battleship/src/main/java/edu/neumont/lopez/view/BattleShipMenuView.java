@@ -40,8 +40,8 @@ public class BattleShipMenuView implements edu.neumont.lopez.battleship.view.Bat
 
         this.stage.setTitle("Battleship");
         this.stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("Battleship-icon.png")));
-        this.stage.setMinWidth(420);
-        this.stage.setMinHeight(270);
+        this.stage.setMinWidth(430);
+        this.stage.setMinHeight(280);
         this.stage.setMaxWidth(430);
         this.stage.setMaxHeight(280);
         this.stage.show();
@@ -63,9 +63,9 @@ public class BattleShipMenuView implements edu.neumont.lopez.battleship.view.Bat
             }
             Scene scene = new Scene(root);
             this.stage.setScene(scene);
-            this.stage.setMinWidth(720);
-            this.stage.setMinHeight(870);
-            this.stage.setMaxWidth(730);
+            this.stage.setMinWidth(800);
+            this.stage.setMinHeight(880);
+            this.stage.setMaxWidth(800);
             this.stage.setMaxHeight(880);
 
             MyBattleShipView viewController = loader.getController();
@@ -80,6 +80,12 @@ public class BattleShipMenuView implements edu.neumont.lopez.battleship.view.Bat
         start.setOnAction(click);
 
         EventHandler<ActionEvent> clickLoad = event -> {
+
+
+            //TODO
+
+
+
 
         };
         load.setText("Load");

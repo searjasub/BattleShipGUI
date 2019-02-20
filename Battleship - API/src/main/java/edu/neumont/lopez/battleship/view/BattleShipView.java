@@ -20,4 +20,7 @@ public interface BattleShipView {
     void showSquareAlreadyTaken(Coordinate coordinate);
     void showSquareOutOfBounds(Coordinate coordinate);
 
+    void setCountOnShipsPlaced(int countOnShipsPlaced);
+
+    void hideButtons();
 }

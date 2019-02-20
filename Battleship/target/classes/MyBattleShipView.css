@@ -35,11 +35,55 @@ Label.bottom {
 }
 
 .doneBtn {
+    -fx-font-family: "HP Simplified Light", "Comic Sans MS";
+    -fx-font-size: 12pt;
+    -fx-padding: 10px 14px 10px 14px;
+    -fx-alignment: center;
     -fx-min-width: 80px;
     -fx-min-height: 25px;
+    -fx-background-color: #98FFB0;
+    -fx-border-radius: 5px;
+}
+
+.doneBtn:hover{
+    -fx-font-family: "HP Simplified Light", "Comic Sans MS";
+    -fx-font-size: 12pt;
+    -fx-padding: 10px 14px 10px 14px;
+    -fx-alignment: center;
+    -fx-min-width: 80px;
+    -fx-min-height: 25px;
+    -fx-text-fill: white;
+    -fx-background-color: #30CC54;
+}
+
+.notDoneBtn {
+    -fx-font-family: "HP Simplified Light", "Comic Sans MS";
+    -fx-border-radius: 5px;
+    -fx-font-size: 12pt;
+    -fx-padding: 10px 14px 10px 14px;
+    -fx-alignment: center;
+    -fx-min-width: 80px;
+    -fx-min-height: 25px;
+    -fx-background-color: #FF7E87;
+
+}
+
+.notDoneBtn:hover{
+    /*-fx-font-weight: 4pt;*/
+    -fx-font-family: "HP Simplified Light", "Comic Sans MS";
+    -fx-font-size: 12pt;
+    -fx-padding: 10px 14px 10px 14px;
+    -fx-alignment: center;
+    -fx-min-width: 80px;
+    -fx-min-height: 25px;
+    -fx-text-fill: white;
+    -fx-background-color: #CC303B;
+    /*-fx-font-weight: 4pt;*/
+
 }
 
 .textAboveButton {
+    -fx-text-alignment: center;
     -fx-font-family: "HP Simplified Light", "Comic Sans MS";
     -fx-font-size: 16px;
     -fx-background-color: red;
@@ -69,4 +113,8 @@ Label.firstSquare {
     -fx-background-color: black;
     -fx-min-width: 30px;
     -fx-min-height: 30px;
+}
+
+.buttonGrid {
+    -fx-alignment: center;
 }

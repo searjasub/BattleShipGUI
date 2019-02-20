@@ -5,12 +5,15 @@ import edu.neumont.lopez.battleship.enumeration.State;
 import edu.neumont.lopez.battleship.model.Board;
 import edu.neumont.lopez.battleship.model.Coordinate;
 import edu.neumont.lopez.battleship.model.Player;
-import edu.neumont.lopez.battleship.model.Ship;
 import edu.neumont.lopez.battleship.view.BattleShipView;
 import interfaces.ConsoleUI;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -28,7 +31,8 @@ public class MyBattleShipView implements BattleShipView {
     public Label playerTurnLabel;
     public GridPane boardGridPane;
     public GridPane boardGridPaneAttacking;
-    public Button doneBtn;
+    public Label doneBtn;
+    public Label notDoneBtn;
     public Text textAboveButton;
     private BattleShipController controller;
     private Stage turnStage;
@@ -59,22 +63,35 @@ public class MyBattleShipView implements BattleShipView {
 
     public void init() {
 
+        hideButtons();
         initPlayer(controller.getTurn());
-
         this.turnStage.setTitle("Battleship");
         this.turnStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("Battleship-icon.png")));
         this.turnStage.centerOnScreen();
         this.turnStage.show();
     }
 
+    public void setCountOnShipsPlaced(int countOnShipsPlaced) {
+        this.countOnShipsPlaced = countOnShipsPlaced;
+    }
+
     private void initPlayer(Player turn) {
         controller.initPlayers(getPlayersName());
         drawShootingGrid();
         drawOwnGrid();
-        showShipInfo();
+        //showShipInfo();
+        textAboveBtn();
         controller.initPlayer(turn);
-        placeSwitchViewButton();
+        //placeSwitchViewButton();
+    }
 
+    public void hideButtons() {
+        doneBtn.setVisible(false);
+        notDoneBtn.setVisible(false);
+    }
+
+    private void textAboveBtn() {
+        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship Waiting to be placed: Carrier | Size: 5");
     }
 
     public Coordinate viewPlacingShips() {
@@ -91,7 +108,7 @@ public class MyBattleShipView implements BattleShipView {
             @Override
             public void handle(MouseEvent event) {
                 if (countOnShipsPlaced < 5) {
-                    showShipInfo();
+                    //showShipInfo();
                     Label labelOwnPlayer = (Label) event.getSource();
                     String buttonId = labelOwnPlayer.getId();
                     String[] pieces = buttonId.split("x");
@@ -99,14 +116,30 @@ public class MyBattleShipView implements BattleShipView {
                     Coordinate coordinate = new Coordinate((Integer.parseInt(pieces[0])), Integer.parseInt(pieces[1]));
                     System.out.println("View: " + coordinate);
                     if (event.getButton() == MouseButton.PRIMARY) {
-                        controller.placeShips(coordinate, countOnShipsPlaced, true);
-                        countOnShipsPlaced++;
+                        if (controller.placeShips(coordinate, countOnShipsPlaced, true)) {
+                            countOnShipsPlaced++;
+                            showShipInfo();
+                        }
+                        showShipInfo();
                     } else if (event.getButton() == MouseButton.SECONDARY) {
-                        controller.placeShips(coordinate, countOnShipsPlaced, false);
-                        countOnShipsPlaced++;
+                        if (controller.placeShips(coordinate, countOnShipsPlaced, false)) {
+                            countOnShipsPlaced++;
+                            showShipInfo();
+                        }
+                        showShipInfo();
                     }
 
-                } else {
+                }
+
+                if (countOnShipsPlaced == 5) {
+
+                    textAboveButton.setText("Do you like your board setup this way?\n");
+                    doneBtn.setText("Yes");
+                    notDoneBtn.setText("No");
+                    doneBtn.setVisible(true);
+                    notDoneBtn.setVisible(true);
+                    placeSwitchViewButton();
+
                     //BetweenTurns screen
                 }
 
@@ -116,20 +149,18 @@ public class MyBattleShipView implements BattleShipView {
     }
 
 
-
     public void showShipInfo() {
 
-        //textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship size: 5");
-        if (countOnShipsPlaced == 0){
-        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship size: 4");
-        } else if (countOnShipsPlaced == 2){
-        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship size: 3");
-        }else if (countOnShipsPlaced == 3){
-        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship size: 2");
-        }else if (countOnShipsPlaced == 4){
-        textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship size: 1");
-        }
 
+        if (countOnShipsPlaced == 1) {
+            textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship: Battleship | Size: 4");
+        } else if (countOnShipsPlaced == 2) {
+            textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship: Submarine | Size: 3");
+        } else if (countOnShipsPlaced == 3) {
+            textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Shi: Cruiser | Size: 3");
+        } else if (countOnShipsPlaced == 4) {
+            textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship: Destroyer | Size: 2");
+        }
     }
 
 
@@ -164,17 +195,38 @@ public class MyBattleShipView implements BattleShipView {
     }
 
     private void placeSwitchViewButton() {
-        EventHandler<ActionEvent> clickHandler = event -> {
-            doneBtn = (Button) event.getSource();
-            doneBtn.getStyleClass().add("switchview");
+
+
+        doneBtn.getStyleClass().add("doneBtn");
+
+        EventHandler<MouseEvent> yes = event -> {
+            doneBtn = (Label) event.getSource();
 
             this.setTurnStage(secondStage);
-            controller.switchTurn();
+            //controller.switchTurn();
             updateTurnDisplay(controller.getTurn());
 
             System.out.println("button clicked");
         };
-        doneBtn.setOnAction(clickHandler);
+        doneBtn.setOnMouseClicked(yes);
+
+        notDoneBtn.getStyleClass().add("notDoneBtn");
+
+        EventHandler<MouseEvent> no = event -> {
+            notDoneBtn = (Label) event.getSource();
+
+            controller.notHappy();
+            textAboveBtn();
+
+
+//            this.setTurnStage(secondStage);
+//            //controller.switchTurn();
+//            updateTurnDisplay(controller.getTurn());
+
+            System.out.println("No button clicked");
+        };
+        notDoneBtn.setOnMouseClicked(no);
+
     }
 
     private void drawShootingGrid() {

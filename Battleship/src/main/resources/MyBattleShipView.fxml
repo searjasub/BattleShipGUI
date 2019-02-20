@@ -32,8 +32,10 @@
             </VBox>
             <VBox styleClass="vBox">
                 <Text fx:id="textAboveButton" styleClass="textAboveButton">aa</Text>
-                <Button fx:id="doneBtn" styleClass="doneBtn">
-                </Button>
+                <HBox styleClass="buttonGrid">
+                    <Label fx:id="doneBtn" styleClass="doneBtn"> </Label>
+                    <Label fx:id="notDoneBtn" styleClass="notDoneBtn"> </Label>
+                </HBox>
             </VBox>
         </HBox>
     </center>
