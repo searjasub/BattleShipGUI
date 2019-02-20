@@ -32,7 +32,7 @@
             </VBox>
             <VBox styleClass="vBox">
                 <Text fx:id="textAboveButton" styleClass="textAboveButton">aa</Text>
-                <HBox styleClass="buttonGrid">
+                <HBox fx:id="hbox" styleClass="buttonGrid">
                     <Label fx:id="doneBtn" styleClass="doneBtn"> </Label>
                     <Label fx:id="notDoneBtn" styleClass="notDoneBtn"> </Label>
                 </HBox>

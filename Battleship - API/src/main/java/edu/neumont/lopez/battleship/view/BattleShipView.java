@@ -10,13 +10,10 @@ public interface BattleShipView {
 
     void init();
     void registerController(BattleShipController battleShipController);
-    boolean setShipOrientation();
     boolean done();
-
 
     void updateBoardDisplay(Board board);
     void updateTurnDisplay(Player turn);
-    Coordinate viewPlacingShips();
     void showSquareAlreadyTaken(Coordinate coordinate);
     void showSquareOutOfBounds(Coordinate coordinate);
 

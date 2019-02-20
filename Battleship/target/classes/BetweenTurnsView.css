@@ -1,0 +1,10 @@
+BorderPane{
+    -fx-background-color: black;
+}
+
+.label {
+    -fx-background-color: black;
+    -fx-font-size: 25pt;
+    -fx-text-fill: white;
+    -fx-font-family: "HP Simplified Light", "Comic Sans MS";
+}

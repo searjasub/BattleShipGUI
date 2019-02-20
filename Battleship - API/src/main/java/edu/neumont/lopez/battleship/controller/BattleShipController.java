@@ -123,17 +123,14 @@ public class BattleShipController {
             ship = new Ship(Ships.DESTROYER);
             return isValid(whereInBoard, ship);
         }
-
         return false;
     }
 
     private boolean isValid(Coordinate whereInBoard, Ship ship) {
-
         try {
             if (checkInsideBoard(ship, whereInBoard)) {
-                if (isValidPosition(whereInBoard)) {
+                if (!isValidPosition(whereInBoard, ship)) {
                     view.showSquareAlreadyTaken(whereInBoard);
-                    System.out.println(whereInBoard + " is not valid");
                     return false;
                 } else {
                     updateBoardDirection(ship, whereInBoard);
@@ -143,16 +140,86 @@ public class BattleShipController {
             }
         } catch (IndexOutOfBoundsException ex) {
             view.showSquareOutOfBounds(whereInBoard);
-            System.out.println("outside of board");
             return false;
         }
         return true;
     }
 
 
-    public boolean isValidPosition(Coordinate coordinate) {
-        return turn.getBoard().getSquares()[coordinate.getRow()][coordinate.getCol()].getState() != State.EMPTY;
+    public boolean isValidPosition(Coordinate c, Ship ship) {
+
+        if (horizontal) {
+            if (ship.getSize() == Ships.CARRIER.getSize()) {
+                for (int i = 0; i < Ships.CARRIER.getSize(); i++) {
+                    if (turn.getBoard().getSquares()[c.getRow()][c.getCol() + i].getState() != State.EMPTY) {
+                        return false;
+                    }
+                }
+            } else if (ship.getSize() == Ships.BATTLESHIP.getSize()) {
+                for (int i = 0; i < Ships.BATTLESHIP.getSize(); i++) {
+                    if (turn.getBoard().getSquares()[c.getRow()][c.getCol() + i].getState() != State.EMPTY) {
+                        return false;
+                    }
+                }
+            } else if (ship.getSize() == Ships.CRUISER.getSize()) {
+                for (int i = 0; i < Ships.CRUISER.getSize(); i++) {
+                    if (turn.getBoard().getSquares()[c.getRow()][c.getCol() + i].getState() != State.EMPTY) {
+                        return false;
+                    }
+                }
+            } else if (ship.getSize() == Ships.SUBMARINE.getSize()) {
+                for (int i = 0; i < Ships.SUBMARINE.getSize(); i++) {
+                    if (turn.getBoard().getSquares()[c.getRow()][c.getCol() + i].getState() != State.EMPTY) {
+                        return false;
+                    }
+                }
+            } else if (ship.getSize() == Ships.DESTROYER.getSize()) {
+                for (int i = 0; i < Ships.DESTROYER.getSize(); i++) {
+                    if (turn.getBoard().getSquares()[c.getRow()][c.getCol() + i].getState() != State.EMPTY) {
+                        return false;
+                    }
+                }
+            }
+        } else {
+            if (ship.getSize() == Ships.CARRIER.getSize()) {
+                for (int i = 0; i < Ships.CARRIER.getSize(); i++) {
+                    if (turn.getBoard().getSquares()[c.getRow() + i][c.getCol()].getState() != State.EMPTY) {
+                        return false;
+                    }
+                }
+            } else if (ship.getSize() == Ships.BATTLESHIP.getSize()) {
+                for (int i = 0; i < Ships.BATTLESHIP.getSize(); i++) {
+                    if (turn.getBoard().getSquares()[c.getRow() + i][c.getCol()].getState() != State.EMPTY) {
+                        return false;
+                    }
+                }
+            } else if (ship.getSize() == Ships.CRUISER.getSize()) {
+                for (int i = 0; i < Ships.CRUISER.getSize(); i++) {
+                    if (turn.getBoard().getSquares()[c.getRow() + i][c.getCol()].getState() != State.EMPTY) {
+                        return false;
+                    }
+                }
+            } else if (ship.getSize() == Ships.SUBMARINE.getSize()) {
+                for (int i = 0; i < Ships.SUBMARINE.getSize(); i++) {
+                    if (turn.getBoard().getSquares()[c.getRow() + i][c.getCol()].getState() != State.EMPTY) {
+                        return false;
+                    }
+                }
+            } else if (ship.getSize() == Ships.DESTROYER.getSize()) {
+                for (int i = 0; i < Ships.DESTROYER.getSize(); i++) {
+                    if (turn.getBoard().getSquares()[c.getRow() + i][c.getCol()].getState() != State.EMPTY) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
+
+
+    //return turn.getBoard().getSquares()[coordinate.getRow()][coordinate.getCol()].getState() != State.EMPTY;
+
 
     public boolean checkInsideBoard(Ship s, Coordinate c) {
         if (horizontal) {
@@ -327,7 +394,6 @@ public class BattleShipController {
                 }
             }
         }
-
         return true;
     }
 
