@@ -65,6 +65,7 @@ public class MyBattleShipView implements BattleShipView {
         hideButtons();
         initPlayer(controller.getTurn());
         this.turnStage.setTitle("Battleship");
+        //TODO hint to add icon (Search on Google)
         this.turnStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("Battleship-icon.png")));
         this.turnStage.centerOnScreen();
         this.turnStage.show();
@@ -75,13 +76,13 @@ public class MyBattleShipView implements BattleShipView {
     }
 
     private void initPlayer(Player turn) {
+        turnStage.hide();
         controller.initPlayers(getPlayersName());
+        turnStage.show();
         drawShootingGrid();
         drawOwnGrid();
-        //showShipInfo();
         textAboveBtn();
         controller.initPlayer(turn);
-        //placeSwitchViewButton();
     }
 
     public void hideButtons() {
@@ -148,6 +149,7 @@ public class MyBattleShipView implements BattleShipView {
         boolean isValid1 = false;
         while (!isValid1) {
             TextInputDialog dialog1 = new TextInputDialog("Enter your name");
+            //TODO add icon
             dialog1.setTitle("Enter your name");
             dialog1.setContentText("Please enter player 1 name:");
             playerOneName = dialog1.showAndWait();

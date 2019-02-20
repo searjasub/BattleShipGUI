@@ -20,7 +20,6 @@ public class BattleShipController {
 
     private int userEx = -1;
     private boolean horizontal;
-    private Coordinate coordinate;
 
 
     public BattleShipController(BattleShipView ui) {
@@ -93,20 +92,12 @@ public class BattleShipController {
         }
     }
 
-    public void coordinateHelper(Coordinate coordinate) {
-        this.coordinate = coordinate;
-    }
 
     public boolean placeShips(Coordinate coordinate, int shipSize, boolean posistion) {
         Coordinate whereInBoard;
-
         whereInBoard = coordinate;
         horizontal = posistion;
-
         Ship ship;
-
-        System.out.println("controller: " + coordinate);
-
         if (shipSize == 0) {
             ship = new Ship(Ships.CARRIER);
             return isValid(whereInBoard, ship);
@@ -144,7 +135,6 @@ public class BattleShipController {
         }
         return true;
     }
-
 
     public boolean isValidPosition(Coordinate c, Ship ship) {
 
@@ -213,13 +203,8 @@ public class BattleShipController {
                 }
             }
         }
-
         return true;
     }
-
-
-    //return turn.getBoard().getSquares()[coordinate.getRow()][coordinate.getCol()].getState() != State.EMPTY;
-
 
     public boolean checkInsideBoard(Ship s, Coordinate c) {
         if (horizontal) {
@@ -302,8 +287,7 @@ public class BattleShipController {
             }
         }
     }
-
-
+    
     private boolean validate(Coordinate c, Ship s, boolean horizontal) {
         if (horizontal) {
             if (s.getSize() == Ships.CARRIER.getSize()) {
