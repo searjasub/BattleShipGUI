@@ -103,55 +103,78 @@ public class BattleShipController {
         whereInBoard = coordinate;
         horizontal = posistion;
 
-        Ship[] ships = board.getShips();
         Ship ship;
 
         System.out.println("controller: " + coordinate);
 
         if (shipSize == 0) {
             ship = new Ship(Ships.CARRIER);
-            if (checkForOverlapping(whereInBoard, ship)) return false;
-        }
-
-        if (shipSize == 1) {
+            return isValid(whereInBoard, ship);
+        } else if (shipSize == 1) {
             ship = new Ship(Ships.BATTLESHIP);
-            if (checkForOverlapping(whereInBoard, ship)) return false;
-        }
-        if (shipSize == 2) {
+            return isValid(whereInBoard, ship);
+        } else if (shipSize == 2) {
             ship = new Ship(Ships.SUBMARINE);
-            if (checkForOverlapping(whereInBoard, ship)) return false;
-        }
-        if (shipSize == 3) {
+            return isValid(whereInBoard, ship);
+        } else if (shipSize == 3) {
             ship = new Ship(Ships.CRUISER);
-            if (checkForOverlapping(whereInBoard, ship)) return false;
-        }
-        if (shipSize == 4) {
+            return isValid(whereInBoard, ship);
+        } else if (shipSize == 4) {
             ship = new Ship(Ships.DESTROYER);
-            if (checkForOverlapping(whereInBoard, ship)) return false;
+            return isValid(whereInBoard, ship);
         }
 
-        return true;
-    }
-
-    private boolean checkForOverlapping(Coordinate whereInBoard, Ship ship) {
-        if (checkInsideBoard(ship, whereInBoard)) {
-            if (checkForOverlapping(whereInBoard)) {
-                view.showSquareAlreadyTaken(whereInBoard);
-                System.out.println(whereInBoard + " is not valid");
-                return true;
-            } else {
-                updateBoardDirection(ship, whereInBoard);
-            }
-        }
         return false;
     }
 
-    public void updateBoardDirection(Ship s, Coordinate c) {
+    private boolean isValid(Coordinate whereInBoard, Ship ship) {
 
+        try {
+            if (checkInsideBoard(ship, whereInBoard)) {
+                if (isValidPosition(whereInBoard)) {
+                    view.showSquareAlreadyTaken(whereInBoard);
+                    System.out.println(whereInBoard + " is not valid");
+                    return false;
+                } else {
+                    updateBoardDirection(ship, whereInBoard);
+                }
+            } else {
+                return false;
+            }
+        } catch (IndexOutOfBoundsException ex) {
+            view.showSquareOutOfBounds(whereInBoard);
+            System.out.println("outside of board");
+            return false;
+        }
+        return true;
+    }
+
+
+    public boolean isValidPosition(Coordinate coordinate) {
+        return turn.getBoard().getSquares()[coordinate.getRow()][coordinate.getCol()].getState() != State.EMPTY;
+    }
+
+    public boolean checkInsideBoard(Ship s, Coordinate c) {
+        if (horizontal) {
+            if (!((Board.BOARD_WIDTH) - c.getCol() >= s.getSize())) {
+                view.showSquareOutOfBounds(c);
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if (!((Board.BOARD_HEIGHT) - c.getRow() >= s.getSize())) {
+                view.showSquareOutOfBounds(c);
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    public void updateBoardDirection(Ship s, Coordinate c) {
         if (validate(c, s, horizontal)) {
             paintShip(c, s, horizontal);
-        } else {
-            placeShips(c, s.getSize(), horizontal);
         }
     }
 
@@ -308,34 +331,6 @@ public class BattleShipController {
         return true;
     }
 
-    public boolean checkForOverlapping(Coordinate coordinate) {
-        if (turn.getBoard().getSquares()[coordinate.getRow()][coordinate.getCol()].getState() == State.EMPTY) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean checkInsideBoard(Ship s, Coordinate c) {
-        if (horizontal) {
-            if ((c.getCol() <= 0 || c.getCol() > 9)
-                    && (Board.BOARD_WIDTH - c.getCol() < s.getSize())) {
-                view.showSquareOutOfBounds(c);
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            if ((c.getRow() <= 0 || c.getRow() >= 10)
-                    && (Board.BOARD_HEIGHT - c.getRow() < s.getSize())) {
-                view.showSquareOutOfBounds(c);
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-
     public void save(File file) throws IOException {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
             out.writeObject(this.board);
@@ -363,7 +358,7 @@ public class BattleShipController {
         run();
     }
 
-    public void notHappy(){
+    public void notHappy() {
         this.view.setCountOnShipsPlaced(0);
         this.view.hideButtons();
         setupScreen();

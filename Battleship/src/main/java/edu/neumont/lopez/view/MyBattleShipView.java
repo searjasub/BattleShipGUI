@@ -9,7 +9,6 @@ import edu.neumont.lopez.battleship.view.BattleShipView;
 import interfaces.ConsoleUI;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -119,14 +118,18 @@ public class MyBattleShipView implements BattleShipView {
                         if (controller.placeShips(coordinate, countOnShipsPlaced, true)) {
                             countOnShipsPlaced++;
                             showShipInfo();
+                        } else {
+                            showShipInfo();
+
                         }
-                        showShipInfo();
                     } else if (event.getButton() == MouseButton.SECONDARY) {
                         if (controller.placeShips(coordinate, countOnShipsPlaced, false)) {
                             countOnShipsPlaced++;
                             showShipInfo();
+                        } else {
+
+                            showShipInfo();
                         }
-                        showShipInfo();
                     }
 
                 }
@@ -195,11 +198,9 @@ public class MyBattleShipView implements BattleShipView {
     }
 
     private void placeSwitchViewButton() {
-
-
+        
         doneBtn.getStyleClass().add("doneBtn");
-
-        EventHandler<MouseEvent> yes = event -> {
+        EventHandler<MouseEvent> happy = event -> {
             doneBtn = (Label) event.getSource();
 
             this.setTurnStage(secondStage);
@@ -208,24 +209,18 @@ public class MyBattleShipView implements BattleShipView {
 
             System.out.println("button clicked");
         };
-        doneBtn.setOnMouseClicked(yes);
+
+        doneBtn.setOnMouseClicked(happy);
 
         notDoneBtn.getStyleClass().add("notDoneBtn");
-
-        EventHandler<MouseEvent> no = event -> {
+        EventHandler<MouseEvent> noHappy = event -> {
             notDoneBtn = (Label) event.getSource();
-
             controller.notHappy();
             textAboveBtn();
-
-
-//            this.setTurnStage(secondStage);
-//            //controller.switchTurn();
-//            updateTurnDisplay(controller.getTurn());
-
             System.out.println("No button clicked");
         };
-        notDoneBtn.setOnMouseClicked(no);
+
+        notDoneBtn.setOnMouseClicked(noHappy);
 
     }
 
