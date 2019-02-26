@@ -24,7 +24,7 @@
     <left>
         <VBox styleClass="vBox">
             <Text fx:id="trackingBoardPlayer1" styleClass="infoText">Tracking Board</Text>
-            <GridPane fx:id="player1PaneAttacking" styleClass="hit">
+            <GridPane fx:id="player1PaneAttacking" styleClass="hitBoard">
             </GridPane>
             <Text fx:id="boardPlayer1" styleClass="infoText">Your board</Text>
             <GridPane fx:id="player1GridPane" styleClass="own">
@@ -34,7 +34,7 @@
     <right>
         <VBox styleClass="vBox">
             <Text fx:id="trackingBoardPlayer2" styleClass="infoText">Tracking Board</Text>
-            <GridPane fx:id="player2PaneAttacking" styleClass="hit">
+            <GridPane fx:id="player2PaneAttacking" styleClass="hitBoard">
             </GridPane>
             <Text fx:id="boardPlayer2" styleClass="infoText2">Your board</Text>
             <GridPane fx:id="player2GridPane" styleClass="own">

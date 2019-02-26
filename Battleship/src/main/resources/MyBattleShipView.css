@@ -15,7 +15,11 @@ Label.empty {
 }
 
 Label.hit {
-    -fx-border-color: red;
+    -fx-background-color: red;
+}
+
+Label.miss{
+    -fx-background-color: blue;
 }
 
 Label.bottom {
@@ -25,8 +29,9 @@ Label.bottom {
     -fx-font-family: "HP Simplified Light", "Comic Sans MS";
 }
 
-.hit {
+.hitBoard {
     -fx-padding: 10px 50px 35px 50px;
+    -fx-alignment: center;
 }
 
 .own {

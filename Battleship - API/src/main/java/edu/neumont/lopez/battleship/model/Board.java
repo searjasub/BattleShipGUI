@@ -11,12 +11,8 @@ public class Board implements Serializable {
     public static final int BOARD_WIDTH = 11;
     public static final int BOARD_HEIGHT = 11;
     private static final long serialVersionUID = 1L;
-    private final char[] BOARD_LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
     private Ship[] ships;
     private BoardSquare[][] squares = new BoardSquare[BOARD_WIDTH][BOARD_HEIGHT];
-//    private Player playerOne = new Player();
-//    private Player playerTwo = new Player();
-//    private Player turn;
 
     public Board() {
         initBoard();
@@ -29,7 +25,6 @@ public class Board implements Serializable {
                 squares[r][c].setState(State.EMPTY);
             }
         }
-        //this.turn = this.playerOne;
     }
 
     public void initBoard() {
@@ -70,12 +65,19 @@ public class Board implements Serializable {
 
     public void checkSquareTaken(Coordinate coordinate) {
         if (isSquareTaken(coordinate)) {
-//            throw new SquareAlreadyTakenException(coordinate);
             System.out.println("square " + coordinate + " already taken");
         }
     }
 
+    public void setSquareState(State s, Coordinate coordinate){
+        squares[coordinate.getRow()][coordinate.getCol()].setState(s);
+    }
+
     public boolean isSquareTaken(Coordinate coordinate) {
         return squares[coordinate.getRow()][coordinate.getCol()].getState() != State.EMPTY;
+    }
+
+    public State checkStateOfSquare(Coordinate c){
+        return squares[c.getRow()][c.getCol()].getState();
     }
 }

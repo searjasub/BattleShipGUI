@@ -16,7 +16,7 @@ public class Player implements Serializable {
     }
 
     public void setLives(int lives) {
-        this.lives += lives;
+        this.lives -= lives;
     }
 
     public String getName() {

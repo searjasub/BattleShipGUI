@@ -2,7 +2,10 @@ package edu.neumont.lopez.battleship.controller;
 
 import edu.neumont.lopez.battleship.enumeration.Ships;
 import edu.neumont.lopez.battleship.enumeration.State;
-import edu.neumont.lopez.battleship.model.*;
+import edu.neumont.lopez.battleship.model.Board;
+import edu.neumont.lopez.battleship.model.Coordinate;
+import edu.neumont.lopez.battleship.model.Player;
+import edu.neumont.lopez.battleship.model.Ship;
 import edu.neumont.lopez.battleship.view.BattleShipView;
 
 import java.io.*;
@@ -11,14 +14,10 @@ import java.util.List;
 public class BattleShipController {
 
     private BattleShipView view;
-    //    private Board board = new Board();
-//    private Board attackingBoard = new Board();
     private Player player1 = new Player();
     private Player player2 = new Player();
     private Player turn = player1;
     private Player notTurn = player2;
-
-    private int userEx = -1;
     private boolean horizontal;
 
 
@@ -54,34 +53,11 @@ public class BattleShipController {
         this.view.updateBoardDisplay(turn.getBoard());
     }
 
-    public void setupScreenPlayer2(Player notTurn){
+    public void setupScreenPlayer2(Player notTurn) {
         notTurn.getBoard().resetBoard();
         this.view.updateTurnDisplay(notTurn);
         this.view.updateBoardDisplay2(notTurn.getBoard());
     }
-
-
-
-
-    /*public void takeTurn() {
-        System.out.println("Ok " + turn.getName() + " , let's attack " + notTurn.getName() + "'s board.\nHere is an empty board where we will be tracking your opponent's board");
-        boolean repeatedAttacked;
-        do {
-            turn.getAttackingBoard().printBoard();
-            Coordinate coordinatesOfAttack;
-            coordinatesOfAttack = view.getCoordinate();
-            repeatedAttacked = updateBothBoards(coordinatesOfAttack, notTurn.getBoard().getSquares(), turn.getAttackingBoard().getSquares());
-        } while (!repeatedAttacked);
-        do {
-            System.out.println("\n\nAfter that moved here is what you got.\n\nYour attacking board");
-            turn.getAttackingBoard().printBoard();
-            if (notTurn.getLives() == 0) {
-                break;
-            }
-            System.out.println("\n------------------------------------------\n\nYour board");
-            turn.getBoard().printBoard();
-        } while (!view.done());
-    }*/
 
     public void switchTurn() {
         if (turn == player1) {
@@ -96,25 +72,39 @@ public class BattleShipController {
         }
     }
 
-    public boolean updateBothBoards(Coordinate c, BoardSquare[][] notTurnBoard, BoardSquare[][] turnAttackingBoard) {
-        if (notTurnBoard[c.getRow() + userEx][c.getCol()].getState() == State.HIT) {
-            System.out.println("\n\nYou already attacked that one before, try another one");
-            return false;
-        } else if (notTurnBoard[c.getRow() + userEx][c.getCol()].getState() == State.UNHIT) {
-            notTurnBoard[c.getRow() + userEx][c.getCol()].setState(State.HIT);
-            turnAttackingBoard[c.getRow() + userEx][c.getCol()].setState(State.HIT);
-            notTurn.setLives(-1);
-            System.out.println("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nGood job " + turn.getName() + "! You hit " + notTurn.getName() + "'s ship\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            return true;
-        } else {
-            notTurnBoard[c.getRow() + userEx][c.getCol()].setState(State.MISS);
-            turnAttackingBoard[c.getRow() + userEx][c.getCol()].setState(State.MISS);
-            System.out.println("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nYou missed, better luck next time!\n" +
-                    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            return true;
+
+    public void attack(Coordinate coordinate, Player turn) {
+        if (turn == getPlayer1()) {
+            if (getNotTurn().getBoard().checkStateOfSquare(coordinate) == State.EMPTY) {
+                getTurn().getAttackingBoard().setSquareState(State.MISS, coordinate);
+                getNotTurn().getBoard().setSquareState(State.MISS, coordinate);
+                view.updateBoardDisplay2(getNotTurn().getBoard());
+                view.updateAttackingDisplay1(getTurn().getAttackingBoard());
+            } else if (getNotTurn().getBoard().checkStateOfSquare(coordinate) == State.UNHIT) {
+                getTurn().getAttackingBoard().setSquareState(State.HIT, coordinate);
+                getNotTurn().getBoard().setSquareState(State.HIT, coordinate);
+                view.updateAttackingDisplay1(getTurn().getAttackingBoard());
+                view.updateBoardDisplay2(getNotTurn().getBoard());
+                getNotTurn().setLives(1);
+            }
+        } else if (turn == getPlayer2()) {
+            if (getNotTurn().getBoard().checkStateOfSquare(coordinate) == State.EMPTY) {
+                getTurn().getAttackingBoard().setSquareState(State.MISS, coordinate);
+                getNotTurn().getBoard().setSquareState(State.MISS, coordinate);
+                view.updateBoardDisplay(getNotTurn().getBoard());
+                view.updateAttackingDisplay2(getTurn().getAttackingBoard());
+            } else if (getNotTurn().getBoard().checkStateOfSquare(coordinate) == State.UNHIT) {
+                getTurn().getAttackingBoard().setSquareState(State.HIT, coordinate);
+                getNotTurn().getBoard().setSquareState(State.HIT, coordinate);
+                view.updateBoardDisplay(getNotTurn().getBoard());
+                view.updateAttackingDisplay2(getTurn().getAttackingBoard());
+                getNotTurn().setLives(1);
+            }
+        }
+        if (getNotTurn().getLives() == 0) {
+            view.showWinner(getTurn());
         }
     }
-
 
     public boolean placeShips(Coordinate coordinate, int shipSize, boolean position, Player turn) {
         Coordinate whereInBoard;
@@ -143,7 +133,7 @@ public class BattleShipController {
     private boolean isValid(Coordinate whereInBoard, Ship ship, Player turn) {
         try {
             if (checkInsideBoard(ship, whereInBoard)) {
-                if (!isValidPosition(whereInBoard, ship , turn)) {
+                if (!isValidPosition(whereInBoard, ship, turn)) {
                     view.showSquareAlreadyTaken(whereInBoard);
                     return false;
                 } else {
@@ -290,7 +280,7 @@ public class BattleShipController {
             } else if (s.getSize() == Ships.BATTLESHIP.getSize()) {
                 for (int i = 0; i < Ships.BATTLESHIP.getSize(); i++) {
                     Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
-                    onSquareSelected(newToCheck,turn);
+                    onSquareSelected(newToCheck, turn);
                 }
             } else if (s.getSize() == Ships.CRUISER.getSize()) {
                 for (int i = 0; i < Ships.CRUISER.getSize(); i++) {
@@ -300,12 +290,12 @@ public class BattleShipController {
             } else if (s.getSize() == Ships.SUBMARINE.getSize()) {
                 for (int i = 0; i < Ships.SUBMARINE.getSize(); i++) {
                     Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
-                    onSquareSelected(newToCheck,turn);
+                    onSquareSelected(newToCheck, turn);
                 }
             } else if (s.getSize() == Ships.DESTROYER.getSize()) {
                 for (int i = 0; i < Ships.DESTROYER.getSize(); i++) {
                     Coordinate newToCheck = new Coordinate(c.getRow() + i, c.getCol());
-                    onSquareSelected(newToCheck,turn);
+                    onSquareSelected(newToCheck, turn);
                 }
             }
         }
@@ -436,17 +426,17 @@ public class BattleShipController {
         return player2;
     }
 
-    public void onResetRequested() {
-        this.view.setCountOnShipsPlaced(0);
-        run();
-    }
+//    public void onResetRequested() {
+//        this.view.setCountOnShipsPlaced(0);
+//        this.view.onRestart();
+//    }
 
     public void notHappy() {
-        if (turn == player1){
-        this.view.setCountOnShipsPlaced(0);
-        this.view.hideButtons();
-        setupScreen(turn);
-        } else if (turn == player2){
+        if (turn == player1) {
+            this.view.setCountOnShipsPlaced(0);
+            this.view.hideButtons();
+            setupScreen(turn);
+        } else if (turn == player2) {
             this.view.setCountOnShipsPlaced(0);
             this.view.hideButtons();
             setupScreenPlayer2(turn);
@@ -454,14 +444,15 @@ public class BattleShipController {
     }
 
     public void onSquareSelected(Coordinate coordinate, Player turn) {
-        if (turn == player1){
-
-        turn.getBoard().takeSquare(State.UNHIT, coordinate);
-        this.view.updateBoardDisplay(turn.getBoard());
-        } else if (turn == player2){
+        if (turn == player1) {
+            turn.getBoard().takeSquare(State.UNHIT, coordinate);
+            this.view.updateBoardDisplay(turn.getBoard());
+        } else if (turn == player2) {
             turn.getBoard().takeSquare(State.UNHIT, coordinate);
             this.view.updateBoardDisplay2(turn.getBoard());
         }
     }
+
+
 
 }
