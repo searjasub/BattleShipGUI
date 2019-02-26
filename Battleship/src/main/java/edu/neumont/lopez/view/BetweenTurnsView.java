@@ -1,18 +1,11 @@
 package edu.neumont.lopez.view;
 
-import edu.neumont.lopez.battleship.controller.BattleShipMenuController;
 import edu.neumont.lopez.battleship.controller.BetweenTurnsController;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
 
 
 public class BetweenTurnsView implements edu.neumont.lopez.battleship.view.BetweenTurnsView {
@@ -42,6 +35,8 @@ public class BetweenTurnsView implements edu.neumont.lopez.battleship.view.Betwe
     private void drawLabel() {
 
         EventHandler<MouseEvent> click = event -> {
+
+
 
 
         };

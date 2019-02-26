@@ -1,18 +1,15 @@
 package edu.neumont.lopez.view;
 
 import edu.neumont.lopez.battleship.controller.BattleShipController;
-import edu.neumont.lopez.battleship.controller.BetweenTurnsController;
 import edu.neumont.lopez.battleship.enumeration.State;
 import edu.neumont.lopez.battleship.model.Board;
 import edu.neumont.lopez.battleship.model.Coordinate;
 import edu.neumont.lopez.battleship.model.Player;
 import edu.neumont.lopez.battleship.view.BattleShipView;
-import interfaces.ConsoleUI;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.event.EventType;
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -20,40 +17,50 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
+import java.util.List;
 
 public class MyBattleShipView implements BattleShipView {
 
     public Label playerTurnLabel;
-    public GridPane boardGridPane;
-    public GridPane boardGridPaneAttacking;
+    public GridPane player1PaneAttacking;
+    public GridPane player1GridPane;
+    public GridPane player2PaneAttacking;
+    public GridPane player2GridPane;
     public Label doneBtn;
     public Label notDoneBtn;
     public Text textAboveButton;
     public HBox hbox;
-    private BattleShipController controller;
-    private Stage turnStage;
-    private Stage secondStage;
-    private Stage firstStage;
-    private Map<Coordinate, Label> boardLabels = new HashMap<>();
+    public Text trackingBoardPlayer1;
+    public Text boardPlayer1;
+    public  Text trackingBoardPlayer2;
+    public Text boardPlayer2;
+    public BorderPane borderPane;
 
+    private BattleShipController controller;
+    private Stage stage;
+    private Map<Coordinate, Label> boardLabels = new HashMap<>();
+    private Map<Coordinate, Label> boardLabels2 = new HashMap<>();
     private int countOnShipsPlaced = 0;
 
-    public Stage getTurnStage() {
-        return turnStage;
+    public Stage getStage() {
+        return stage;
     }
 
-    public void setTurnStage(Stage turnStage) {
-        this.turnStage = turnStage;
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     @Override
@@ -63,12 +70,18 @@ public class MyBattleShipView implements BattleShipView {
 
     public void init() {
         hideButtons();
+        stage.hide();
+        controller.initPlayers(getPlayersName());
         initPlayer(controller.getTurn());
-        this.turnStage.setTitle("Battleship");
-        //TODO hint to add icon (Search on Google)
-        this.turnStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("Battleship-icon.png")));
-        this.turnStage.centerOnScreen();
-        this.turnStage.show();
+        initPlayer(controller.getNotTurn());
+
+        this.stage.setTitle("Battleship");
+        this.stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("Battleship-icon.png")));
+        this.stage.centerOnScreen();
+        this.stage.setMinWidth(1200);
+        this.stage.setMinHeight(880);
+        this.stage.show();
+
     }
 
     public void setCountOnShipsPlaced(int countOnShipsPlaced) {
@@ -76,13 +89,42 @@ public class MyBattleShipView implements BattleShipView {
     }
 
     private void initPlayer(Player turn) {
-        turnStage.hide();
-        controller.initPlayers(getPlayersName());
-        turnStage.show();
-        drawShootingGrid();
-        drawOwnGrid();
+        stage.hide();
+        drawShootingGridPlayer1();
+        drawOwnGridPlayer1();
+        drawShootingGridPlayer2();
+        drawOwnGridPlayer2();
         textAboveBtn();
+        hidePlayer2();
+
         controller.initPlayer(turn);
+    }
+
+    public void hidePlayer2(){
+        trackingBoardPlayer2.setVisible(false);
+        player2PaneAttacking.setVisible(false);
+        boardPlayer2.setVisible(false);
+        player2GridPane.setVisible(false);
+    }
+    public void showPlayer2(){
+        trackingBoardPlayer2.setVisible(true);
+        player2PaneAttacking.setVisible(true);
+        boardPlayer2.setVisible(true);
+        player2GridPane.setVisible(true);
+    }
+
+    public void hidePlayer1(){
+        trackingBoardPlayer1.setVisible(false);
+        player1PaneAttacking.setVisible(false);
+        boardPlayer1.setVisible(false);
+        player1GridPane.setVisible(false);
+    }
+
+    public void showPlayer1(){
+        trackingBoardPlayer1.setVisible(true);
+        player1PaneAttacking.setVisible(true);
+        boardPlayer1.setVisible(true);
+        player1GridPane.setVisible(true);
     }
 
     public void hideButtons() {
@@ -94,7 +136,7 @@ public class MyBattleShipView implements BattleShipView {
         textAboveButton.setText("Let's place your ships on the board\nLEFT CLICK = Horizontal\nRIGHT CLICK = Vertical\n\n" + "Current Ship Waiting to be placed: Carrier | Size: 5");
     }
 
-    private EventHandler<MouseEvent> handleOnMouseClick() {
+    private EventHandler<MouseEvent> handleOnMouseClickPlayer1() {
         return event -> {
             if (countOnShipsPlaced < 5) {
                 Label labelOwnPlayer = (Label) event.getSource();
@@ -103,14 +145,14 @@ public class MyBattleShipView implements BattleShipView {
                 Coordinate coordinate = new Coordinate((Integer.parseInt(pieces[0])), Integer.parseInt(pieces[1]));
                 System.out.println("View: " + coordinate);
                 if (event.getButton() == MouseButton.PRIMARY) {
-                    if (controller.placeShips(coordinate, countOnShipsPlaced, true)) {
+                    if (controller.placeShips(coordinate, countOnShipsPlaced, true, controller.getTurn())) {
                         countOnShipsPlaced++;
                         showShipInfo();
                     } else {
                         showShipInfo();
                     }
                 } else if (event.getButton() == MouseButton.SECONDARY) {
-                    if (controller.placeShips(coordinate, countOnShipsPlaced, false)) {
+                    if (controller.placeShips(coordinate, countOnShipsPlaced, false, controller.getTurn())) {
                         countOnShipsPlaced++;
                         showShipInfo();
                     } else {
@@ -118,18 +160,50 @@ public class MyBattleShipView implements BattleShipView {
                     }
                 }
             }
-            if (countOnShipsPlaced == 5) {
-                textAboveButton.setText("Do you like your board setup this way?\n");
-                hbox.setSpacing(20);
-                doneBtn.setText("Yes");
-                notDoneBtn.setText("No");
-                doneBtn.setVisible(true);
-                notDoneBtn.setVisible(true);
-                placeSwitchViewButton();
-
-                //BetweenTurnsView screen
-            }
+            doneWithPlacing();
         };
+    }
+
+    private EventHandler<MouseEvent> handleOnMouseClickPlayer2() {
+        return event -> {
+            if (countOnShipsPlaced < 5) {
+                Label labelPlayer2 = (Label) event.getSource();
+                String buttonId = labelPlayer2.getId();
+                String[] pieces = buttonId.split("x");
+                Coordinate coordinate = new Coordinate((Integer.parseInt(pieces[0])), Integer.parseInt(pieces[1]));
+                System.out.println("Board 2: " + coordinate);
+                if (event.getButton() == MouseButton.PRIMARY) {
+                    if (controller.placeShips(coordinate, countOnShipsPlaced, true, controller.getNotTurn())) {
+                        countOnShipsPlaced++;
+                        showShipInfo();
+                    } else {
+                        showShipInfo();
+                    }
+                } else if (event.getButton() == MouseButton.SECONDARY) {
+                    if (controller.placeShips(coordinate, countOnShipsPlaced, false, controller.getNotTurn())) {
+                        countOnShipsPlaced++;
+                        showShipInfo();
+                    } else {
+                        showShipInfo();
+                    }
+                }
+            }
+            doneWithPlacing();
+        };
+    }
+
+    private void doneWithPlacing() {
+        if (countOnShipsPlaced == 5) {
+            textAboveButton.setText("Do you like your board setup this way?\n");
+            hbox.setSpacing(20);
+            doneBtn.setText("Yes");
+            notDoneBtn.setText("No");
+            doneBtn.setVisible(true);
+            notDoneBtn.setVisible(true);
+            placeSwitchViewButton();
+
+            //BetweenTurnsView screen
+        }
     }
 
     public void showShipInfo() {
@@ -149,9 +223,10 @@ public class MyBattleShipView implements BattleShipView {
         boolean isValid1 = false;
         while (!isValid1) {
             TextInputDialog dialog1 = new TextInputDialog("Enter your name");
-            //TODO add icon
             dialog1.setTitle("Enter your name");
             dialog1.setContentText("Please enter player 1 name:");
+            Stage stage = (Stage) dialog1.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("Battleship-icon.png")));
             playerOneName = dialog1.showAndWait();
             if (playerOneName.isPresent()) {
                 isValid1 = true;
@@ -161,6 +236,8 @@ public class MyBattleShipView implements BattleShipView {
         boolean isValid2 = false;
         while (!isValid2) {
             TextInputDialog dialog2 = new TextInputDialog("Enter your name");
+            Stage stage = (Stage) dialog2.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("Battleship-icon.png")));
             dialog2.setContentText("Please enter player 2 name");
             playerTwoName = dialog2.showAndWait();
             if (playerTwoName.isPresent()) {
@@ -178,28 +255,12 @@ public class MyBattleShipView implements BattleShipView {
         doneBtn.getStyleClass().add("doneBtn");
         EventHandler<MouseEvent> happy = event -> {
             doneBtn = (Label) event.getSource();
-            URL location = this.getClass().getClassLoader().getResource("BetweenTurnsView.fxml");
-            FXMLLoader loader = new FXMLLoader(location);
-            try {
-                Parent root = loader.load();
-                Scene scene = new Scene(root);
-                this.turnStage.setScene(scene);
-                this.turnStage.setMinWidth(800);
-                this.turnStage.setMinHeight(880);
-                this.turnStage.setMaxWidth(800);
-                this.turnStage.setMaxHeight(880);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            BetweenTurnsView viewController = loader.getController();
-            viewController.setStage(this.turnStage);
-            BetweenTurnsController controller1 = new BetweenTurnsController(viewController);
-            controller1.run();
 
-            this.setTurnStage(secondStage);
+            //MainView.showBetween();
+            controller.switchTurn();
             updateTurnDisplay(controller.getTurn());
-
-            System.out.println("button clicked");
+            hidePlayer1();
+            showPlayer2();
         };
 
         doneBtn.setOnMouseClicked(happy);
@@ -214,14 +275,14 @@ public class MyBattleShipView implements BattleShipView {
         notDoneBtn.setOnMouseClicked(noHappy);
     }
 
-    private void drawShootingGrid() {
+    private void drawShootingGridPlayer1() {
 
         for (int c = 0; c < Board.BOARD_WIDTH; c++) {
             for (int r = 0; r < Board.BOARD_HEIGHT; r++) {
                 Label labelAttacking = new Label();
                 labelAttacking.getStyleClass().add("grid");
                 labelAttacking.setId("" + r + "x" + c);
-                this.boardGridPaneAttacking.add(labelAttacking, c, r);
+                this.player1PaneAttacking.add(labelAttacking, c, r);
             }
         }
         for (int c = 0; c < 1; c++) {
@@ -230,7 +291,7 @@ public class MyBattleShipView implements BattleShipView {
                 column.setText("" + r);
                 column.getTextAlignment();
                 column.getStyleClass().add("info");
-                this.boardGridPaneAttacking.add(column, c, r);
+                this.player1PaneAttacking.add(column, c, r);
             }
         }
         for (int c = 0; c < Board.BOARD_WIDTH; c++) {
@@ -239,23 +300,53 @@ public class MyBattleShipView implements BattleShipView {
                 char upper = (char) ('@' + c);
                 column.setText("" + upper);
                 column.getStyleClass().add("info");
-                this.boardGridPaneAttacking.add(column, c, r);
+                this.player1PaneAttacking.add(column, c, r);
             }
         }
     }
 
-    private void drawOwnGrid() {
+    private void drawShootingGridPlayer2() {
+
+        for (int c = 0; c < Board.BOARD_WIDTH; c++) {
+            for (int r = 0; r < Board.BOARD_HEIGHT; r++) {
+                Label labelAttacking = new Label();
+                labelAttacking.getStyleClass().add("grid");
+                labelAttacking.setId("" + r + "x" + c);
+                this.player2PaneAttacking.add(labelAttacking, c, r);
+            }
+        }
+        for (int c = 0; c < 1; c++) {
+            for (int r = 0; r < Board.BOARD_HEIGHT; r++) {
+                Label column = new Label();
+                column.setText("" + r);
+                column.getTextAlignment();
+                column.getStyleClass().add("info");
+                this.player2PaneAttacking.add(column, c, r);
+            }
+        }
+        for (int c = 0; c < Board.BOARD_WIDTH; c++) {
+            for (int r = 0; r < 1; r++) {
+                Label column = new Label();
+                char upper = (char) ('@' + c);
+                column.setText("" + upper);
+                column.getStyleClass().add("info");
+                this.player2PaneAttacking.add(column, c, r);
+            }
+        }
+    }
+
+    private void drawOwnGridPlayer1() {
         for (int c = 0; c < Board.BOARD_WIDTH; c++) {
             for (int r = 0; r < Board.BOARD_HEIGHT; r++) {
                 Label labelOwnPlayer = new Label();
                 if (c == 0 && r == 0) {
                     labelOwnPlayer.getStyleClass().add("firstSquare");
-                    this.boardGridPane.add(labelOwnPlayer, c, r);
+                    this.player1GridPane.add(labelOwnPlayer, c, r);
                 } else {
                     labelOwnPlayer.getStyleClass().add("grid");
-                    labelOwnPlayer.addEventFilter(MouseEvent.MOUSE_CLICKED, handleOnMouseClick());
+                    labelOwnPlayer.addEventFilter(MouseEvent.MOUSE_CLICKED, handleOnMouseClickPlayer1());
                     labelOwnPlayer.setId("" + r + "x" + c);
-                    this.boardGridPane.add(labelOwnPlayer, c, r);
+                    this.player1GridPane.add(labelOwnPlayer, c, r);
                     this.boardLabels.put(new Coordinate(r, c), labelOwnPlayer);
                 }
             }
@@ -266,7 +357,7 @@ public class MyBattleShipView implements BattleShipView {
                 row.setText("" + r);
                 row.getTextAlignment();
                 row.getStyleClass().add("info");
-                this.boardGridPane.add(row, c, r);
+                this.player1GridPane.add(row, c, r);
             }
         }
 
@@ -276,7 +367,44 @@ public class MyBattleShipView implements BattleShipView {
                 char upper = (char) ('@' + c);
                 column.setText("" + upper);
                 column.getStyleClass().add("info");
-                this.boardGridPane.add(column, c, r);
+                this.player1GridPane.add(column, c, r);
+            }
+        }
+    }
+
+    private void drawOwnGridPlayer2() {
+        for (int c = 0; c < Board.BOARD_WIDTH; c++) {
+            for (int r = 0; r < Board.BOARD_HEIGHT; r++) {
+                Label labelOwnPlayer = new Label();
+                if (c == 0 && r == 0) {
+                    labelOwnPlayer.getStyleClass().add("firstSquare");
+                    this.player2GridPane.add(labelOwnPlayer, c, r);
+                } else {
+                    labelOwnPlayer.getStyleClass().add("grid");
+                    labelOwnPlayer.addEventFilter(MouseEvent.MOUSE_CLICKED, handleOnMouseClickPlayer2());
+                    labelOwnPlayer.setId("" + r + "x" + c);
+                    this.player2GridPane.add(labelOwnPlayer, c, r);
+                    this.boardLabels2.put(new Coordinate(r, c), labelOwnPlayer);
+                }
+            }
+        }
+        for (int c = 0; c < 1; c++) {
+            for (int r = 0; r < Board.BOARD_HEIGHT; r++) {
+                Label row = new Label();
+                row.setText("" + r);
+                row.getTextAlignment();
+                row.getStyleClass().add("info");
+                this.player2GridPane.add(row, c, r);
+            }
+        }
+
+        for (int c = 1; c < Board.BOARD_WIDTH; c++) {
+            for (int r = 0; r < 1; r++) {
+                Label column = new Label();
+                char upper = (char) ('@' + c);
+                column.setText("" + upper);
+                column.getStyleClass().add("info");
+                this.player2GridPane.add(column, c, r);
             }
         }
     }
@@ -287,6 +415,33 @@ public class MyBattleShipView implements BattleShipView {
             for (int r = 0; r < Board.BOARD_HEIGHT; r++) {
                 State state = board.getLocation(r, c);
                 Label label = this.boardLabels.get(new Coordinate(r, c));
+
+                if (label != null) {
+                    switch (state) {
+                        case UNHIT:
+                            label.getStyleClass().add("unhit");
+                            break;
+                        case HIT:
+                            label.getStyleClass().add("hit");
+                            break;
+                        case MISS:
+                            label.getStyleClass().add("miss");
+                            break;
+                        case EMPTY:
+                            label.getStyleClass().removeAll("hit", "miss", "unhit");
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void updateBoardDisplay2(Board board) {
+        for (int c = 0; c < Board.BOARD_WIDTH; c++) {
+            for (int r = 0; r < Board.BOARD_HEIGHT; r++) {
+                State state = board.getLocation(r, c);
+                Label label = this.boardLabels2.get(new Coordinate(r, c));
                 if (label != null) {
                     switch (state) {
                         case UNHIT:
@@ -332,16 +487,15 @@ public class MyBattleShipView implements BattleShipView {
         do {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Select save file");
-            File file = chooser.showSaveDialog(this.turnStage);
+            File file = chooser.showSaveDialog(this.stage);
             if (file == null) {
                 return;
             }
             try {
                 this.controller.save(file);
                 saved = true;
-
             } catch (IOException ex) {
-                new Alert(Alert.AlertType.ERROR, "An error occured trying to save the file. Please select another location", ButtonType.OK);
+                new Alert(Alert.AlertType.ERROR, "An error occured trying to save the file. Please select another location", ButtonType.OK).showAndWait();
             }
         } while (!saved);
     }
@@ -351,7 +505,7 @@ public class MyBattleShipView implements BattleShipView {
         do {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Select saved file");
-            file = chooser.showOpenDialog(this.turnStage);
+            file = chooser.showOpenDialog(this.stage);
             if (file == null) {
                 return;
             }
@@ -369,7 +523,7 @@ public class MyBattleShipView implements BattleShipView {
     }
 
     private void shutdown() {
-        this.turnStage.close();
+        this.stage.close();
     }
 
     public void onAbout(ActionEvent actionEvent) {
@@ -378,11 +532,5 @@ public class MyBattleShipView implements BattleShipView {
         popup.show();
     }
 
-    public boolean done() {
-        try {
-            return ConsoleUI.promptForBool("Are you ready to pass the laptop?", "Y", "N");
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+
 }

@@ -1,19 +1,12 @@
 package edu.neumont.lopez.view;
 
-import edu.neumont.lopez.battleship.controller.BattleShipController;
 import edu.neumont.lopez.battleship.controller.BattleShipMenuController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
 
 public class BattleShipMenuView implements edu.neumont.lopez.battleship.view.BattleShipMenuView {
 
@@ -53,26 +46,8 @@ public class BattleShipMenuView implements edu.neumont.lopez.battleship.view.Bat
         hbox.setSpacing(25);
 
         EventHandler<ActionEvent> click = event -> {
-            URL location = this.getClass().getClassLoader().getResource("MyBattleShipView.fxml");
-            FXMLLoader loader = new FXMLLoader(location);
-            Parent root = null;
-            try {
-                root = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Scene scene = new Scene(root);
-            this.stage.setScene(scene);
-            this.stage.setMinWidth(800);
-            this.stage.setMinHeight(880);
-            this.stage.setMaxWidth(800);
-            this.stage.setMaxHeight(880);
 
-            MyBattleShipView viewController = loader.getController();
-            viewController.setTurnStage(this.stage);
-
-            BattleShipController controller = new BattleShipController(viewController);
-            controller.run();
+            MainView.showGame();
         };
 
         start.setText("New Game");
@@ -80,10 +55,6 @@ public class BattleShipMenuView implements edu.neumont.lopez.battleship.view.Bat
         start.setOnAction(click);
 
         EventHandler<ActionEvent> clickLoad = event -> {
-
-
-            //TODO
-
 
 
 

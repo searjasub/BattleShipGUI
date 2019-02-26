@@ -11,10 +11,6 @@ public class Player implements Serializable {
     private Board attackingBoard;
     private int lives = 17;
 
-//    public Player(String name) {
-//        this.setName(name);
-//    }
-
     public int getLives() {
         return lives;
     }

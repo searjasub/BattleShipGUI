@@ -14,9 +14,9 @@ public class Board implements Serializable {
     private final char[] BOARD_LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
     private Ship[] ships;
     private BoardSquare[][] squares = new BoardSquare[BOARD_WIDTH][BOARD_HEIGHT];
-    private Player playerOne = new Player();
-    private Player playerTwo = new Player();
-    private Player turn;
+//    private Player playerOne = new Player();
+//    private Player playerTwo = new Player();
+//    private Player turn;
 
     public Board() {
         initBoard();
@@ -29,7 +29,7 @@ public class Board implements Serializable {
                 squares[r][c].setState(State.EMPTY);
             }
         }
-        this.turn = this.playerOne;
+        //this.turn = this.playerOne;
     }
 
     public void initBoard() {
@@ -41,27 +41,9 @@ public class Board implements Serializable {
         initShips();
     }
 
-    public Player getPlayerOne() {
-        return playerOne;
-    }
-
-    public void setPlayerOne(Player playerOne) {
-        this.playerOne = playerOne;
-    }
-
-    public Player getPlayerTwo() {
-        return playerTwo;
-    }
-
-    public void setPlayerTwo(Player playerTwo) {
-        this.playerTwo = playerTwo;
-    }
-
     public Ship[] getShips() {
         return ships;
     }
-
-
 
     private void initShips() {
         ships = new Ship[]{
@@ -76,9 +58,6 @@ public class Board implements Serializable {
         return squares;
     }
 
-    public Player getTurn() {
-        return turn;
-    }
 
     public State getLocation(int row, int col) {
         return squares[row][col].getState();
